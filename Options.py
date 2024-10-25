@@ -70,7 +70,7 @@ class AvitoParser:
             sleep_time = random.uniform(10, 100)
             options.add_argument("--enable-javascript")
             options.add_argument("--headless=new")
-            browser  =   webdriver.Chrome()
+            browser  =   webdriver.Chrome(options=options)
             
 
             browser.get(url)
