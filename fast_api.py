@@ -11,8 +11,20 @@ from sqlalchemy.sql.expression import delete
 from sqlalchemy_utils import database_exists, create_database
 import uuid
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
-url_db = "postgresql://postgres:admin111@localhost:5432/advertdb"
+
+name_db = os.getenv('name_db')
+pass_db = os.getenv('pass_db')
+host_db =os.getenv('host_db')
+postgr  = os.getenv('postgr')
+name_user_db = os.getenv('name_user_db')
+
+db_pass = os.getenv('db_pass')
+
+url_db = f"{postgr}://{name_user_db}:{pass_db}@{host_db}/{name_db}"
+
 
 
 def create_engine_advart(url_db):
@@ -23,9 +35,8 @@ def create_engine_advart(url_db):
     
     return create_engine(url_db)
 
-
-
  
+
 
 engine = create_engine_advart(url_db)
 def create_db_and_tables():

@@ -16,9 +16,9 @@ class CreateUrl(BaseModel):
 class Advert(SQLModel, table =True):
     """ Объект модели объявления """
     id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True, description = 'Сгенерированый уникальный uuid ')
-    url :str = Field(nullable=False, index=True)
-    source_type : str = Field(nullable=False, index= True)
-    last_check_ts : datetime = Field(nullable = True, index=True)
+    url :str = Field(nullable=False, index=True, description    = 'Url ссылка на объявление')
+    source_type : str = Field(nullable=False, index= True, description  = 'Наименование сайта, где опублековано объявление')
+    last_check_ts : datetime = Field(nullable = True, index=True, description   = 'Время последнего обновления')
     is_publicated : bool| None = None
     price : float| None = None
 
@@ -53,6 +53,7 @@ def parse_advert(advert: Advert)->Advert:
     """ Определение с какого сайта объявление,
         И обновление его данных
     """
+    #Добавить фиксацию времени. 
     site = advert.source_type
     match site:
             case 'Yandex':
