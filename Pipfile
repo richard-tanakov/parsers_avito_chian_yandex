@@ -4,20 +4,15 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+sqlmodel = "*"
+pydantic = "*"
+fastapi = {extras = ["standard"] }
+tldextract = "*"
+bs4 = "*"
 selenium = "*"
 webdriver-manager = "*"
-bs4 = "*"
-rich = "*"
-requests = "*"
-cloudscraper = "*"
-sqlalchemy = "*"
-uvicorn = {extras = ["standard"], version = "*"}
-psycopg2-binary = "*"
+psycopg2 = "*"
 sqlalchemy-utils = "*"
-fastapi = {extras = ["standard"], version = "*"}
-pydantic = "*"
-tldextract = "*"
-sqlmodel = "*"
 
 [dev-packages]
 ipykernel = "*"
