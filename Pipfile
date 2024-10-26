@@ -11,9 +11,13 @@ rich = "*"
 requests = "*"
 cloudscraper = "*"
 sqlalchemy = "*"
-fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 psycopg2-binary = "*"
+sqlalchemy-utils = "*"
+fastapi = {extras = ["standard"], version = "*"}
+pydantic = "*"
+tldextract = "*"
+sqlmodel = "*"
 
 [dev-packages]
 ipykernel = "*"
