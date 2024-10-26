@@ -14,8 +14,8 @@ class CreateUrl(BaseModel):
      url : str
 
 class Advert(SQLModel, table =True):
-    
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
+    """ Объект модели объявления """
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True, description = 'Сгенерированый уникальный uuid ')
     url :str = Field(nullable=False, index=True)
     source_type : str = Field(nullable=False, index= True)
     last_check_ts : datetime = Field(nullable = True, index=True)
@@ -24,8 +24,9 @@ class Advert(SQLModel, table =True):
 
 
 
-# Получает домен 
+
 def domain_url(url:str):
+    """ Получение домена """
     url_componens = tldextract.extract(url)
 
     if url_componens.domain == 'ya' or url_componens.domain == 'yandex':
@@ -37,9 +38,10 @@ def domain_url(url:str):
     else:
             return None
     
-#Приводит url к каноническому виду
+
 def normalaze_url(url:str):
-       
+        """Приводит url к каноническому виду """      
+        
         if url[-1] =='/':
                 norm_url = url
                 return norm_url

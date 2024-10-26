@@ -3,13 +3,15 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, Query
 from sqlmodel import Field, Session, SQLModel, select
 from sqlalchemy import create_engine
-import uuid
-from pydantic import  BaseModel
+
 from lib import domain_url, normalaze_url, parse_advert
 from lib import Advert, CreateUrl
 from sqlalchemy.sql.expression import delete
 
 from sqlalchemy_utils import database_exists, create_database
+import uuid
+import os
+
 url_db = "postgresql://postgres:admin111@localhost:5432/advertdb"
 
 

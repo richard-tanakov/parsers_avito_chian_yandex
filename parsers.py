@@ -15,7 +15,7 @@ import re
 
 
 
-#options = ChromeOptions()
+options = ChromeOptions()
 
 
 
