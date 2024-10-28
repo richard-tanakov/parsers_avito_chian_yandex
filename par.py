@@ -32,8 +32,8 @@ class ParserCian:
         
 
     def get_url(self) ->Response:   
-        #sleep_time = random.uniform(10, 100)
-        #sleep(sleep_time)
+        sleep_time = random.uniform(10, 100)
+        sleep(sleep_time)
         response    =   get(url= self.url, headers=self.headers)
         
         
@@ -111,25 +111,6 @@ class ParserCian:
 #
 #            browser.quit()
 #
-#class YandexParser:
-#     
-#     def html_yandex_content(url):
-#        sleep_time = random.uniform(10, 100)
-#        options.add_argument("--enable-javascript")
-#        options.add_argument("--headless=new")
-#        browser  =   webdriver.Chrome(options=options)
-#        browser.get(url=url)
-#        
-#        browser.add_cookie({"name": "foo", "value": "bar"})
-#        try:
-#            price       =   browser.find_element(By.CSS_SELECTOR,'.OfferCardSummaryInfo__price--2FD3C').text
-#            adress      =   browser.find_element(By.CSS_SELECTOR,'.OfferCardCommercialInfo__title--1QsZP > a:nth-child(1)').text                           
-#            content     =   (price +' Объявление активно '+ adress)
-#            print(content, url)
-#        except Exception as e:
-#            content = 'Объяление в архиве'
-#            print(content, url)
-#        browser.close()
-#
-#
-#
+
+
+

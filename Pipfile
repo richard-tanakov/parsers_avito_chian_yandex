@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "*"
+sqlmodel = "*"
+sqlalchemy = "*"
+pydantic = "*"
+sqlalchemy-utils = "*"
+fastapi = {extras = ["standard"], version = "*"}
+tldextract = "*"
+bs4 = "*"
+selenium = "*"
+webdriver-manager = "*"
+psycopg2 = "*"
+lxml = "*"
+datetime = "*"
+
+[dev-packages]
+ipykernel = "*"
+
+[requires]
+python_version = "3.12"

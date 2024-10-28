@@ -11,6 +11,7 @@ from sqlalchemy.sql.expression import delete
 from sqlalchemy_utils import database_exists, create_database
 import uuid
 import os
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -24,6 +25,14 @@ name_user_db = os.getenv('name_user_db')
 db_pass = os.getenv('db_pass')
 
 url_db = f"{postgr}://{name_user_db}:{pass_db}@{host_db}/{name_db}"
+
+from time import sleep
+import random
+from selenium import webdriver
+from selenium.webdriver import ChromeOptions
+from selenium.webdriver.common.by import By
+import json
+
 
 
 
@@ -75,12 +84,28 @@ def create_url(create_url:CreateUrl, session:SessionDep) -> Advert:
     session.commit()
     session.refresh(advert)
     return advert 
-
+@app.patch('/urls/{url}')
+def update_url_by_url(url : str, session : SessionDep)->Advert:
+    
+    
+    """ Получение данных по url """
+    advert = session.get(Advert, url)
+    if not advert:
+        raise HTTPException(status_code=404, detail="Запись не найдена")
+     
+    #получение  данных, перезапись в бд вывод из неё данных
+    
+    updated_advert  =   parse_advert(advert)
+    session.add(updated_advert)
+    session.commit()
+    session.refresh(updated_advert)
+    
+    return updated_advert
 
 
 @app.get('/urls/{id}')
 def read_url_by_uuid(id : str, session : SessionDep) -> Advert:
-    #обращение к бд и возвращение объекта из бд. 
+    #обращение к бд и возвращение объекта. 
     advert = session.get(Advert, id)
     if not advert:
         raise HTTPException(status_code=404, detail="Запись не найдена")
@@ -89,16 +114,17 @@ def read_url_by_uuid(id : str, session : SessionDep) -> Advert:
 
 @app.get('/urls/')
 def read_url_by_url(url:str, session:SessionDep) -> Advert:
-    #обращение к бд и возвращение объекта из бд. 
-
-    advert = session.exec(select(Advert).where(Advert.url== url)).first()
+    #обращение к бд и возвращение объекта. 
+    urls = normalaze_url(url)
+    advert = session.exec(select(Advert).where(Advert.url== urls)).first()
     if not advert:
         raise HTTPException(status_code=404, detail="Запись не найдена")
     return advert 
 
 
+
 @app.patch('/urls/{id}')
-def update_url_by_uuid(id:str, session: SessionDep):
+def update_url_by_uuid(id:str, session: SessionDep) ->Advert:
     """ Получение данных по id """
     advert = session.get(Advert, id)
     if not advert:
@@ -107,29 +133,15 @@ def update_url_by_uuid(id:str, session: SessionDep):
     #получение  данных перезапись в бд вывод из неё данных
 
     updated_advert  =    parse_advert(advert)
-    session.add(updated_advert)
+    
     session.commit()
     session.refresh(updated_advert)
         
      
     return updated_advert 
 
-@app.patch('/urls/{url}')
-def update_url_by_url(url:str, session : SessionDep) ->Advert:
-    """ Получение данных по url """
-    advert = session.get(Advert, url)
-    if not advert:
-        raise HTTPException(status_code=404, detail="Запись не найдена")
-     
-    #получение  данных перезапись в бд вывод из неё данных
 
-    updated_advert  =    parse_advert(advert)
-    session.add(updated_advert)
-    session.commit()
-    session.refresh(updated_advert)
-        
-     
-    return updated_advert 
+
 
 @app.delete('/urls/{id}')
 def delete_url(id : str,  session : SessionDep):
