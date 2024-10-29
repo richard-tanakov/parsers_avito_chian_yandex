@@ -19,7 +19,7 @@ load_dotenv()
 from selenium import webdriver
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.common.by import By
-from urllib.parse import unquote
+from fastapi.responses import JSONResponse
 
 name_db = os.getenv('name_db')
 pass_db = os.getenv('pass_db')
@@ -72,37 +72,25 @@ def on_startup():
 def create_url(create_url:CreateUrl, session:SessionDep) -> Advert:
 
     domain =  domain_url(create_url.url)
-    
+    norm_url = normalaze_url(create_url.url)
+    advert = session.exec(select(Advert).where(Advert.url == norm_url)).first()
     if (domain is None):
         raise HTTPException (status_code = 422, detail = 'неккоректный url')
-    norm_url = normalaze_url(create_url.url)
-    advert   = Advert(
-        source_type =   domain, 
-        url         =   norm_url
-    ) 
-    session.add(advert)
-    session.commit()
-    session.refresh(advert)
-    return advert 
+    if  not advert:
+    
+    
+    
 
-@app.patch('/urls/update_advert')
-def update_url_by_url(url:str, session : SessionDep) ->Advert :
-    
-      
-    #""" Получение данных по url """
-    advert = session.exec(select(Advert).where(Advert.url == url)).first()
-    
-    
-    if not advert: 
-        raise HTTPException(status_code=404, detail="Запись не найдена")
-        #получение  данных, перезапись в бд вывод из неё данных
-    
-    updated_advert  =   parse_advert(advert)
-    session.add(updated_advert)
-    session.commit()
-    session.refresh(updated_advert)
-    
-    return updated_advert
+        advert   = Advert(
+            source_type =   domain, 
+            url         =   norm_url
+        ) 
+        session.add(advert)
+        session.commit()
+        session.refresh(advert)
+        return advert 
+    return JSONResponse (status_code = 404, content ={'messange':'Повторное добавление url'})
+
 
 
 @app.get('/urls/{id}')
@@ -141,7 +129,24 @@ def update_url_by_uuid(id:str, session: SessionDep) ->Advert:
     return updated_advert 
 
 
-
+@app.patch('/urls/')
+def update_url_by_url(url:str, session : SessionDep) ->Advert :
+    
+      
+    #""" Получение данных по url """
+    advert = session.exec(select(Advert).where(Advert.url == url)).first()
+    
+    
+    if not advert: 
+        raise HTTPException(status_code=404, detail="Запись не найдена")
+        #получение  данных, перезапись в бд вывод из неё данных
+    
+    updated_advert  =   parse_advert(advert)
+    session.add(updated_advert)
+    session.commit()
+    session.refresh(updated_advert)
+    
+    return updated_advert
 
 
 
