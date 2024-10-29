@@ -103,7 +103,6 @@ def parse_advert(advert: Advert)->Advert:
                 advert.is_publicated = is_published
                 return advert
 
-def start_parsers():
-    """ Достает все url из базы данных  """   
+
           
 
