@@ -11,10 +11,15 @@ from sqlalchemy.sql.expression import delete
 from sqlalchemy_utils import database_exists, create_database
 import uuid
 import os
+from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 load_dotenv()
 
+from selenium import webdriver
+from selenium.webdriver import ChromeOptions
+from selenium.webdriver.common.by import By
+from urllib.parse import unquote
 
 name_db = os.getenv('name_db')
 pass_db = os.getenv('pass_db')
@@ -26,12 +31,6 @@ db_pass = os.getenv('db_pass')
 
 url_db = f"{postgr}://{name_user_db}:{pass_db}@{host_db}/{name_db}"
 
-from time import sleep
-import random
-from selenium import webdriver
-from selenium.webdriver import ChromeOptions
-from selenium.webdriver.common.by import By
-import json
 
 
 
@@ -67,6 +66,7 @@ def on_startup():
     create_db_and_tables()    
 
 
+     
 
 @app.post("/urls/")
 def create_url(create_url:CreateUrl, session:SessionDep) -> Advert:
@@ -75,7 +75,7 @@ def create_url(create_url:CreateUrl, session:SessionDep) -> Advert:
     
     if (domain is None):
         raise HTTPException (status_code = 422, detail = 'неккоректный url')
-    norm_url = normalaze_url(create_url.url) 
+    norm_url = normalaze_url(create_url.url)
     advert   = Advert(
         source_type =   domain, 
         url         =   norm_url
@@ -84,16 +84,18 @@ def create_url(create_url:CreateUrl, session:SessionDep) -> Advert:
     session.commit()
     session.refresh(advert)
     return advert 
-@app.patch('/urls/{url}')
-def update_url_by_url(url : str, session : SessionDep)->Advert:
+
+@app.patch('/urls/update_advert')
+def update_url_by_url(url:str, session : SessionDep) ->Advert :
+    
+      
+    #""" Получение данных по url """
+    advert = session.exec(select(Advert).where(Advert.url == url)).first()
     
     
-    """ Получение данных по url """
-    advert = session.get(Advert, url)
-    if not advert:
+    if not advert: 
         raise HTTPException(status_code=404, detail="Запись не найдена")
-     
-    #получение  данных, перезапись в бд вывод из неё данных
+        #получение  данных, перезапись в бд вывод из неё данных
     
     updated_advert  =   parse_advert(advert)
     session.add(updated_advert)
@@ -111,7 +113,6 @@ def read_url_by_uuid(id : str, session : SessionDep) -> Advert:
         raise HTTPException(status_code=404, detail="Запись не найдена")
     return advert 
 
-
 @app.get('/urls/')
 def read_url_by_url(url:str, session:SessionDep) -> Advert:
     #обращение к бд и возвращение объекта. 
@@ -120,7 +121,6 @@ def read_url_by_url(url:str, session:SessionDep) -> Advert:
     if not advert:
         raise HTTPException(status_code=404, detail="Запись не найдена")
     return advert 
-
 
 
 @app.patch('/urls/{id}')
@@ -139,6 +139,9 @@ def update_url_by_uuid(id:str, session: SessionDep) ->Advert:
         
      
     return updated_advert 
+
+
+
 
 
 

@@ -55,10 +55,10 @@ def normalaze_url(url:str):
         """Приводит url к каноническому виду """      
         
         if url[-1] =='/':
-                norm_url = url
+                norm_url = url[0:-1] 
                 return norm_url
         else:
-               norm_url = url+'/'
+               norm_url = url
                return norm_url
 
 def parse_advert(advert: Advert)->Advert:
